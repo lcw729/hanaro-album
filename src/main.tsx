@@ -11,7 +11,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <SessionProvider>
             <BrowserRouter>
                 <Header/>
-                <App/>
+                <App />
             </BrowserRouter>
         </SessionProvider>
     </React.StrictMode>
