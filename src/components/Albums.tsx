@@ -16,7 +16,8 @@ const Albums = () => {
     const searchParamAlbumId = searchParams.get('albumId');
     const {
         isLoading,
-        data: data
+        data: data,
+        error
     } = useFetch<Album[]>({url: `${BASE_URL}/albums?userId=${user?.id}`})
 
     const goToAlbumDetail = useCallback(() => {
@@ -41,35 +42,36 @@ const Albums = () => {
     return (
         <>
             <div className="flex flex-row px-10 justify-between">
-                <div className="text-3xl font-bold py-10">앨범 목록</div>
+                <div className="title">앨범 목록</div>
                 <button onClick={() => goToAlbumDetail()}
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold m-6 rounded">
                     앨범 상세보기
                 </button>
             </div>
-            {
-                ((!isLoading) && data) ?
-                    (
-                        <div className="flex flex-col text-left font-sans px-10">{
-                            data.map((item) => (
-                                    <div key={item.id}
-                                         onClick={() => handlerAlbumClick(item.id.toString())}
-                                         className={((searchParamAlbumId && (searchParamAlbumId === item.id.toString()))) ?
-                                             "bg-amber-100 p-4 font-bold rounded"
-                                             : "bg-white p-2"
-                                         }>
-                                        {item.id}. {item.title}
-                                    </div>
-                                )
-                            )
-                        }
-                        </div>
-                    ) : (
-                        <div className="text-lg font-bold py-10">
-                            앨범 목록을 가져오고 있습니다.
-                        </div>
+            <div className="flex flex-col items-start px-10">
+                {
+                    isLoading ? (
+                        <h5 className="info-text">앨범 목록을 가져오고 있습니다.</h5>
+                    ) : (error ? (
+                            <h5 className="info-text">에러가 발생했습니다. {error}</h5>
+                        ) : ((data && data.length > 0) ? (
+                                <div className="flex flex-col text-left font-sans px-10">{
+                                    data.map((item) => (
+                                        <div key={item.id}
+                                             onClick={() => handlerAlbumClick(item.id.toString())}
+                                             className={((searchParamAlbumId && (searchParamAlbumId === item.id.toString()))) ?
+                                                 "bg-amber-100 p-4 font-bold rounded"
+                                                 : "bg-white p-2"
+                                             }>
+                                            {item.id}. {item.title}
+                                        </div>
+                                    ))
+                                }</div>
+                            ) : null
+                        )
                     )
-            }
+                }
+            </div>
         </>
     );
 };
