@@ -1,5 +1,4 @@
 import {useEffect, useState} from "react";
-import {useToggle} from "./toggle.ts";
 
 export type FetchParams = {
     url: string | URL | globalThis.Request,
@@ -12,7 +11,8 @@ function useFetch<T>({
                          options = {},
                          dependencies = []
                      }: FetchParams) {
-    const [isLoading, setLoading] = useToggle(true);
+    // warning: useToggle을 쓰면, 상태가 제대로 반영되지 않을 수 있다.
+    const [isLoading, setLoading] = useState<boolean>(true);
     const [data, setData] = useState<T | null>(null);
     const [error, setError] = useState<string | null>(null);
 
@@ -21,8 +21,7 @@ function useFetch<T>({
             options.signal = controller.signal;
 
             (async function () {
-                console.log(url);
-                if (!isLoading) setLoading();
+                setLoading(true);
                 setError('');
 
                 try {
@@ -32,7 +31,7 @@ function useFetch<T>({
                         return;
                     }
 
-                    const data: T = (await res.json()) as T
+                    const data: T = (await res.json()) as T;
                     setData(data);
 
                 } catch (err) {
@@ -41,9 +40,8 @@ function useFetch<T>({
                         if (err.name !== 'AbortError') setError(err.message);
                     }
                 } finally {
-                    if(isLoading) setLoading();
+                    setLoading(false);
                 }
-                console.log('******');
             })();
 
             return () => controller.abort();
