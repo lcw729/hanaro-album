@@ -1,63 +1,75 @@
 import useFetch from "../hook/fetch.ts";
 import {useSession} from "../contexts/session-context.tsx";
-import {useCallback, useEffect, useState} from "react";
-import { useNavigate, useSearchParams} from "react-router-dom";
+import {useCallback} from "react";
+import {useNavigate, useSearchParams} from "react-router-dom";
 
-// const UserURL: string = 'https://jsonplaceholder.typicode.com/users'
+export const BASE_URL: string = 'https://jsonplaceholder.typicode.com'
 
 type Album = {
     id: number,
     title: string
 }
 const Albums = () => {
-    const {session:{user}} = useSession();
+    const {session: {user}} = useSession();
     const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const searchParamAlbumId = searchParams.get('albumId');
     const {
+        isLoading,
         data: data
-    } = useFetch<Album[]>({url: `https://jsonplaceholder.typicode.com/albums?userId=${user?.id}`})
-    const [selectedAlbum, setSelectedAlbum] = useState<number | null>(null);
-
-    useEffect(() => {
-        console.log('re-rendering');
-        if (searchParamAlbumId) {
-            setSelectedAlbum(Number(searchParamAlbumId));
-        }
-    }, [searchParamAlbumId]);
-
-    useEffect(() => {
-
-    }, []);
+    } = useFetch<Album[]>({url: `${BASE_URL}/albums?userId=${user?.id}`})
 
     const goToAlbumDetail = useCallback(() => {
-        if (selectedAlbum) {
-            console.log(selectedAlbum)
-            navigate(`/albums/${selectedAlbum}`);
+        const album = data?.find((item) => {
+            return item.id === Number(searchParamAlbumId);
+        });
+
+        if (album) {
+            navigate(`/albums/${album.id}`,
+                {state: {albumTitle: album.title}});
         } else {
             alert('앨범을 선택해주세요.');
         }
-    }, [selectedAlbum]);
+    }, [data, searchParamAlbumId]);
+
+    // 앨범명 클릭 시, searchParams 변경
+    // 새로고침해도 선택된 앨범 유지
+    const handlerAlbumClick = useCallback((albumId: string) => {
+        setSearchParams({"albumId": albumId});
+    }, [setSearchParams]);
 
     return (
         <>
-            <button onClick={goToAlbumDetail}>앨범 상세보기</button>
-            <div>
-                {
-                data ? (
-                    <div className="flex">{
-                        data.map((item) => (
-                                <div key={item.id}
-                                     onClick={() => setSelectedAlbum(item.id)}
-                                     style={{border: selectedAlbum === item.id ? '2px solid blue' : 'none'}}>
-                                    {item.id}. {item.title}
-                                </div>
+            <div className="flex flex-row px-10 justify-between">
+                <div className="text-3xl font-bold py-10">앨범 목록</div>
+                <button onClick={() => goToAlbumDetail()}
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold m-6 rounded">
+                    앨범 상세보기
+                </button>
+            </div>
+            {
+                ((!isLoading) && data) ?
+                    (
+                        <div className="flex flex-col text-left font-sans px-10">{
+                            data.map((item) => (
+                                    <div key={item.id}
+                                         onClick={() => handlerAlbumClick(item.id.toString())}
+                                         className={((searchParamAlbumId && (searchParamAlbumId === item.id.toString()))) ?
+                                             "bg-amber-100 p-4 font-bold rounded"
+                                             : "bg-white p-2"
+                                         }>
+                                        {item.id}. {item.title}
+                                    </div>
+                                )
                             )
-                        )
-                    }
-                    </div>
-                ) : null
-            }</div>
+                        }
+                        </div>
+                    ) : (
+                        <div className="text-lg font-bold py-10">
+                            앨범 목록을 가져오고 있습니다.
+                        </div>
+                    )
+            }
         </>
     );
 };
