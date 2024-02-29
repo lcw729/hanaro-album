@@ -2,8 +2,8 @@ import {FormEvent, useEffect, useRef, useState} from "react";
 import {useToggle} from "../hook/toggle.ts";
 import {useNavigate} from "react-router-dom";
 import {User, useSession} from "../contexts/session-context.tsx";
+import {BASE_URL} from "./Albums.tsx";
 
-const UserURL: string = 'https://jsonplaceholder.typicode.com/users'
 const Login = () => {
     const [maxUserId] = useState<number>(10);
     const [isUserIdValid, toggle] = useToggle(false);
@@ -13,7 +13,7 @@ const Login = () => {
 
     // 이미 로그인된 사용자의 경우 /albums로 리다렉트.
     useEffect(() => {
-        if(user) {
+        if (user) {
             alert('이미 로그인하셨습니다.');
             navigate('/albums');
         }
@@ -35,7 +35,7 @@ const Login = () => {
                 try {
                     console.log('fetch!!!!')
                     const res = await fetch(
-                        `${UserURL}/${userIdRef.current?.value.toString()}`);
+                        `${BASE_URL}/users/${userIdRef.current?.value.toString()}`);
 
                     if (!res.ok) { // 에러 발생
                         alert(`에러가 발생했습니다. ${res.status.toString()}`);
@@ -57,14 +57,22 @@ const Login = () => {
 
     return (
         <>
-            <form onSubmit={signIn}>
-                <input type="number" ref={userIdRef}/>
-                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-                        type="submit">Sign In
-                </button>
-            </form>
-            <div>
-                {isUserIdValid ? null : (<h5>UserID는 1~{maxUserId}번만 가능합니다.</h5>)}
+            <div className="flex flex-col p-10 items-start">
+                <form onSubmit={signIn} className="flex flex-row">
+                    <label className="text-lg font-bold">
+                        ID:
+                        <input type="number" ref={userIdRef} className="border-2 border-gray-300 p-1 rounded mx-5"
+                               placeholder="ID를 입력하세요."/>
+                    </label>
+                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                            type="submit">Sign In
+                    </button>
+                </form>
+                {isUserIdValid ? null :
+                    (<div className="text-lg font-bold py-10">
+                        UserID는 1~{maxUserId}번만 가능합니다.
+                    </div>)
+                }
             </div>
         </>
     );
