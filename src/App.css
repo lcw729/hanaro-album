@@ -1,0 +1,62 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+/*.fixedHeader {*/
+/*  position: fixed;*/
+/*  top: 0;*/
+/*  left: 0;*/
+/*  width: 100%;*/
+/*  background-color: #333; !* 어두운 배경색 *!*/
+/*  color: white; !* 텍스트 색상 *!*/
+/*  padding: 10px; !* 상하 패딩 *!*/
+/*  !*box-shadow: 0 2px 5px rgba(0,0,0,0.2); !* 그림자 효과 *!*!*/
+/*  !*z-index: 1000; !* 다른 요소들 위에 표시 *!*!*/
+/*  text-align: center; !* 텍스트 중앙 정렬 *!*/
+/*  display: flex;*/
+/*  justify-content: space-between;*/
+/*  align-items: center;*/
+/*}*/
+
+/*body {*/
+/*  padding-top: 75px;*/
+/*}*/
