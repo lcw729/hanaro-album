@@ -1,16 +1,16 @@
 import {useSession} from "../contexts/session-context.tsx";
 import {useNavigate} from "react-router-dom";
-import {useCallback} from "react";
 
 
 const Header = () => {
     const {session: {user}, signOut} = useSession();
     const navigate = useNavigate();
 
-    const logOut = useCallback(() => {
+    const onSignOut = () => {
+        console.log('onSignOut');
         signOut();
-        navigate('');
-    }, []);
+        navigate('/');
+    };
 
     return (
         <div className="w-full">
@@ -28,7 +28,7 @@ const Header = () => {
                                     [ID: {user.id}] {user.username}님
                                 </div>
                                 <button
-                                    onClick={logOut}
+                                    onClick={onSignOut}
                                     className="hidden select-none rounded-lg bg-gradient-to-tr from-gray-900 to-gray-800 py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none lg:inline-block"
                                     type="button">
                                     <span>Sign Out</span>
