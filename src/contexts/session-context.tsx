@@ -1,9 +1,5 @@
 import {createContext, PropsWithChildren, useCallback, useContext, useEffect, useReducer} from "react";
-
-export type User = {
-    id: number,
-    username: string
-}
+import {User} from "../types/models.ts";
 
 type Session = {
     user: User | null;

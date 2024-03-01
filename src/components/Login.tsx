@@ -1,8 +1,9 @@
 import {FormEvent, useRef} from "react";
 import {useToggle} from "../hook/toggle.ts";
 import {useNavigate} from "react-router-dom";
-import {User, useSession} from "../contexts/session-context.tsx";
-import {BASE_URL} from "./Home.tsx";
+import {useSession} from "../contexts/session-context.tsx";
+import {BASE_URL} from "../constants/api.ts";
+import {User} from "../types/models.ts";
 
 const MAX_USER_ID = 10;
 

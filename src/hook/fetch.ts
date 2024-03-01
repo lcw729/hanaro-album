@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 
-export type FetchParams = {
+type FetchParams = {
     url: string | URL | globalThis.Request,
     options?: RequestInit,
     dependencies?: unknown[]

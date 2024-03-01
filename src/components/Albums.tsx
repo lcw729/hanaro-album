@@ -2,7 +2,8 @@ import useFetch from "../hook/fetch.ts";
 import {useSession} from "../contexts/session-context.tsx";
 import {useCallback, useEffect} from "react";
 import {useNavigate, useSearchParams} from "react-router-dom";
-import {Album, BASE_URL} from "./Home.tsx";
+import {Album} from "../types/models.ts";
+import {BASE_URL} from "../constants/api.ts";
 
 const Albums = () => {
     const {session: {user}} = useSession();

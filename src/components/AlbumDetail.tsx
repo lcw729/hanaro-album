@@ -1,7 +1,7 @@
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import useFetch from "../hook/fetch.ts";
 import {useEffect, useState} from "react";
-import {BASE_URL} from "./Home.tsx";
+import {BASE_URL} from "../constants/api.ts";
 
 type Photo = {
     id: number,
