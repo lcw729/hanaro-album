@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 export type FetchParams = {
     url: string | URL | globalThis.Request,
     options?: RequestInit,
-    dependencies?: unknown[],
+    dependencies?: unknown[]
 }
 
 function useFetch<T>({
@@ -18,14 +18,14 @@ function useFetch<T>({
 
     useEffect(() => {
             const controller = new AbortController();
-            options.signal = controller.signal;
+            const fetchOptions = {...options, signal: controller.signal};
 
             (async function () {
                 setLoading(true);
                 setError('');
 
                 try {
-                    const res = await fetch(url, options);
+                    const res = await fetch(url, fetchOptions);
                     if (!res.ok) {
                         setError(res.status.toString());
                         return;
@@ -36,7 +36,6 @@ function useFetch<T>({
 
                 } catch (err) {
                     if (err instanceof Error) {
-                        console.log(err)
                         if (err.name !== 'AbortError') setError(err.message);
                     }
                 } finally {
