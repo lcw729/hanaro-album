@@ -1,19 +1,24 @@
 import './App.css'
-import { Route, Routes} from "react-router-dom";
-import Login from "./components/Login.tsx";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+// import Login from "./components/Login.tsx";
 import Albums from "./components/Albums.tsx";
 import AlbumDetail from "./components/AlbumDetail.tsx";
-import AlbumLayout from "./components/AlbumLayout.tsx";
+import Home from "./components/Home.tsx";
+import Login from "./components/Login.tsx";
+
+// import React from "react";
 
 function App() {
     return (
-        <Routes>
-            <Route path='/' element={<Login/>}></Route>
-            <Route path='albums' element={<AlbumLayout/>}>
-                <Route index element={<Albums/>}/>
-                <Route path=':id' element={<AlbumDetail/>}/>
-            </Route>
-        </Routes>
+        <BrowserRouter>
+            <Routes>
+                <Route path='/' element={<Home/>}>
+                    <Route index element={<Login/>}></Route>
+                    <Route path='albums' element={<Albums/>}/>
+                    <Route path='albums/:id' element={<AlbumDetail/>}/>
+                </Route>
+            </Routes>
+        </BrowserRouter>
     )
 }
 
