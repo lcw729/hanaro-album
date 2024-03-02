@@ -22,30 +22,30 @@ const Albums = () => {
         }
     }, [user, navigate]);
 
-    const goToAlbumDetail = useCallback(() => {
+    // searchParamAlbumId가 변경될 때마다 함수가 재생성되는 것을 방지
+    const goToAlbumDetail = useCallback((albumId: string | null) => {
+        if (!albumId) {
+            alert('앨범을 먼저 선택해주세요.');
+            return; // albumId가 유효하지 않으면 여기서 함수 실행을 중단
+        }
+
         const album = data?.find((item) => {
-            return item.id === Number(searchParamAlbumId);
+            return item.id === Number(albumId);
         });
 
         if (album) {
             navigate(`/albums/${album.id}`,
                 {state: {"albumTitle": album.title}});
         } else {
-            alert('앨범을 선택해주세요.');
+            alert('앨범을 먼저 선택해주세요.');
         }
-    }, [data, searchParamAlbumId, navigate]);
-
-    // 앨범명 클릭 시, searchParams 변경
-    // 새로고침해도 선택된 앨범 유지
-    const handlerAlbumClick = useCallback((album: Album) => {
-        setSearchParams({"albumId": album.id.toString()});
-    }, [setSearchParams]);
+    },[data, navigate]);
 
     return (
         <>
             <div className="flex flex-row px-10 justify-between">
                 <div className="title">앨범 목록</div>
-                <button onClick={goToAlbumDetail}
+                <button onClick={() => goToAlbumDetail(searchParamAlbumId)}
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold m-6 rounded">
                     앨범 상세보기
                 </button>
@@ -60,7 +60,7 @@ const Albums = () => {
                                 <div className="flex flex-col text-left font-sans px-10">{
                                     data.map((item) => (
                                         <div key={item.id}
-                                             onClick={() => handlerAlbumClick(item)}
+                                             onClick={() => setSearchParams({"albumId": item.id.toString()})}
                                              className={((searchParamAlbumId && (searchParamAlbumId === item.id.toString()))) ?
                                                  "bg-amber-100 p-4 font-bold rounded"
                                                  : "bg-white p-2"
